@@ -1,11 +1,86 @@
+import { useEffect, useState } from "react";
+import {Link} from "react-router-dom";
 import styled from "styled-components";
+
+const Container = styled.div`
+    padding: 0px 20px;
+    max-width: 480px;
+    margin: 0 auto;
+`;
+
+const Header = styled.header`
+    heigth: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin:20px 0px;
+`;
+
+const CoinList = styled.ul``;
+
+const Coin = styled.li`
+    color:${props => props.theme.bgColor};
+    background-color :white;
+    margin-bottom: 10px;
+    border-radius: 15px;
+    a {
+        transition: color 0.3s ease-in-out;
+        display: block;
+        padding: 20px;
+    }
+    &:hover {
+        a {
+            color:${props => props.theme.accentColor};
+        }
+    }
+`;
 
 const Title = styled.h1`
     color:${props => props.theme.accentColor};
+    font-size: 48px;
+`;
+const Loading = styled.h1`
+    color:${props => props.theme.textColor};
+    font-size: 48px;
+    text-align: center;
 `;
 
+interface CoinInterface {
+    id: string,
+    name: string,
+    symbol: string,
+    rank: number,
+    is_new: boolean,
+    is_active: boolean,
+    type: string,    
+}
+
 function Coins () {
-    return <Title>Coins</Title>;
+    const [loading, setLoading] = useState(true);
+    const [coins, setCoins] = useState<CoinInterface[]>([]);
+    useEffect(()=>{
+        (async () => {
+            const json = await (await fetch("https://api.coinpaprika.com/v1/coins")).json();
+            setCoins(json.slice(0,100));
+            setLoading(false);
+        })();
+    },[])
+    
+    return <Container>
+        <Header>
+            <Title>코인</Title>
+        </Header>
+        <div>
+            {loading 
+            ? <Loading>Loading...</Loading>
+            : <CoinList>
+                {coins.map(coin => <Coin key={coin.id}>
+                    <Link to={`/${coin.id}`}>{coin.name} &rarr;</Link>
+                    </Coin>)}
+            </CoinList>
+            }
+        </div>
+    </Container>
 }
 
 export default Coins;
