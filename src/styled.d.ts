@@ -2,8 +2,8 @@ import 'styled-components';
 
 declare module 'styled-components' {
     export interface DefaultTheme {
-      bgColor: String,
-      textColor: String,
-      btnColor: String
+      bgColor: string,
+      textColor: string,
+      accentColor: string,
       };
 }
