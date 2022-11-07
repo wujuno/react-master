@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 import {Link} from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
@@ -76,7 +75,7 @@ function Coins () {
         <div>
             {isLoading 
             ? <Loading>Loading...</Loading>
-            : <CoinList>
+            : <CoinList> 
                 {data?.slice(0,100).map(coin => <Coin key={coin.id}>
                     <Link to={{
                         pathname: `/${coin.id}`,
