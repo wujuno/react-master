@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useLocation, Link, useRouteMatch, useParams, Switch, Route  } from "react-router-dom";
 import Chart from "./Chart";
 import Price from "./Price";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 
 const Container = styled.div`
@@ -144,22 +144,6 @@ function Coin () {
     const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(["info",coinId], ()=>fetchCoinInfo(coinId) );
     const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(["tickers",coinId], ()=>fetchCoinTickers(coinId) );
     const loading = infoLoading || tickersLoading
-    /*  const [loading, setLoading] = useState(true);
-    const [info, setInfo] = useState<InfoData>();
-    const [priceInfo, setPriceInfo] = useState<PriceData>();
-    useEffect(() => {
-      (async () => {
-        const infoData = await (
-          await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-        ).json();
-        const priceData = await (
-          await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-        ).json();
-        setInfo(infoData);
-        setPriceInfo(priceData);
-        setLoading(false);
-      })();
-    }, [coinId]); */
     return (
         <Container>
           <Header>
@@ -209,7 +193,7 @@ function Coin () {
                     <Price />
                 </Route>
                 <Route path={`/:coinId/chart`}>
-                    <Chart />
+                    <Chart coinId={coinId} />
                 </Route>
             </Switch>
             </>
