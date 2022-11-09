@@ -23,6 +23,14 @@ const Header = styled.header`
     justify-content: center;
     align-items: center;
     margin:20px 0px;
+    position: relative;
+`;
+const Back = styled.span`
+    position: absolute;
+    left: 20px;
+    font-size: 30px;
+    font-weight:700;
+    top: 8px;
 `;
 const Title = styled.h1`
     color:${props => props.theme.accentColor};
@@ -156,6 +164,11 @@ function Coin () {
             </title>
           </Helmet>
           <Header>
+            <Link to={"/"}>
+              <Back>
+                &larr;
+              </Back>
+            </Link>
             <Title>
               {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
             </Title>
