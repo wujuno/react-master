@@ -28,15 +28,18 @@ interface IForm {
     Username: string;
     Password: string;
     Password2: string;
+    extraError?: string,
 }
 
 
 function ToDoList() {
-    const {register, handleSubmit, formState:{errors} } = useForm<IForm>({defaultValues:{Email:"@naver.com"}});
-    const onvalid = (data:any) => {
-        console.log(data);
+    const {register, handleSubmit, formState:{errors}, setError } = useForm<IForm>({defaultValues:{Email:"@naver.com"}});
+    const onvalid = (data:IForm) => {
+        if(data.Password !== data.Password2){
+           return setError("Password", {message: "Password are not the same"},{shouldFocus:true});
+        }
+        setError("extraError", {message: "Server offline."});
     }
-    console.log(errors?.Email?.message);
     return (
         <div>
             <form style={{display: "flex", flexDirection: "column"}} onSubmit={handleSubmit(onvalid)}>
@@ -48,7 +51,14 @@ function ToDoList() {
                     }
                 })} placeholder="Email"/>
                 <p>{errors?.Email?.message}</p>
-                <input {...register("FirstName",{required:"write here"})} placeholder="FirstName"/>
+                <input {...register("FirstName",{
+                    required:"write here", 
+                    validate: {
+                        nico:(value) => value.includes("nico") ? "no nico allowed" : true,
+                        nick:(value) => value.includes("nick") ? "no nick allowed" : true,
+                    }
+                    })
+                } placeholder="FirstName"/>
                 <p>{errors?.FirstName?.message}</p>
                 <input {...register("LastName",{required:"write here"})} placeholder="LastName"/>
                 <p>{errors?.LastName?.message}</p>
@@ -62,6 +72,7 @@ function ToDoList() {
                 <input {...register("Password2",{required:"write here", minLength:5})} placeholder="Password2"/>
                 <p>{errors?.Password2?.message}</p>
                 <button>Add</button>
+                <p>{errors?.extraError?.message}</p>
             </form>
         </div>
     );
