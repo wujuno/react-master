@@ -12,7 +12,13 @@ function ToDo({text, category, id}:IToDo) {
             const newToDo = { text, id, category: name as any};
             return [...oldToDos.slice(0,targetIndex),newToDo,...oldToDos.slice(targetIndex+1)]
         })
-      };
+    };
+    const handleDelete = () => {
+        setToDo(oldToDos => {
+            const targetIndex = oldToDos.findIndex(todo => todo.id === id);
+            return [...oldToDos.slice(0,targetIndex),...oldToDos.slice(targetIndex+1)]
+        })
+    }
     return (
         <li>
             <span>{text}</span>
@@ -31,6 +37,7 @@ function ToDo({text, category, id}:IToDo) {
                     Done
                     </button>
                 )}
+                <button onClick={handleDelete}>Delete</button>
         </li>
     )
 }
