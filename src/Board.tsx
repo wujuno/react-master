@@ -12,6 +12,7 @@ const Wrapper = styled.div`
   min-height: 300px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 `;
 
 const Title = styled.h2`
@@ -22,9 +23,15 @@ const Title = styled.h2`
 `;
 
 const Area = styled.div<IAreaProps>`
-  background-color: ${props => props.isDraggingOver ? "pink" : props.isDraggingFromThis ? "red" : "blue"};
+  background-color: ${(props) =>
+    props.isDraggingOver
+      ? "#dfe6e9"
+      : props.isDraggingFromThis
+      ? "#b2bec3"
+      : "transparent"};
   flex-grow: 1;
   transition: background-color 0.3s ease-in-out;
+  padding: 20px;
 `;
 
 interface IAreaProps {
