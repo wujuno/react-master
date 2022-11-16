@@ -1,8 +1,10 @@
 import  styled  from "styled-components"
-import {DragDropContext, Draggable, Droppable,DropResult} from "react-beautiful-dnd";
+import {DragDropContext, DropResult, Droppable} from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import { toDoState } from "./atoms";
 import Board from "./Board"
+
+import MakeCategory from "./MakeCategory";
 
 const Wrapper = styled.div`
   display: flex;
@@ -11,7 +13,7 @@ const Wrapper = styled.div`
   margin: 0 auto;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 500px;
 `;
 
 const Boards = styled.div`
@@ -21,8 +23,17 @@ const Boards = styled.div`
   width: 100%;
   gap: 10px;
 `;
+const Container = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+  	align-items: center;
+	heigth:100vh;
 
-
+`;
+const TrashCan = styled.span<{isDraggingFromThis:Boolean}>`
+	font-size:50px;
+`;
 
 
 function App() {
@@ -58,17 +69,42 @@ function App() {
 
 			})
 		}
+		if(destination?.droppableId === "delete"){
+			setToDos(allBoards => {
+				const boardCopy = [...allBoards[source.droppableId]];
+				boardCopy.splice(source.index, 1)
+				return {
+					...allBoards,
+					[source.droppableId]: boardCopy
+				}
+			})
+		}
 	};
   return (
-	<DragDropContext onDragEnd={onDragEnd}>
-      <Wrapper>
-        <Boards>
-			{Object.keys(toDos).map(boardId => 
-          		<Board toDos={toDos[boardId]} key={boardId} boardId={boardId}/>
-			)}
-		  </Boards>
-		</Wrapper>
-	  </DragDropContext>
+	<Container>
+		<MakeCategory></MakeCategory>
+		<DragDropContext onDragEnd={onDragEnd}>
+			<Wrapper>
+				<Boards>
+					{Object.keys(toDos).map(boardId => 
+						<Board toDos={toDos[boardId]} key={boardId} boardId={boardId}/>
+					)}
+				</Boards>
+			</Wrapper>
+			<div>
+				<Droppable droppableId="delete" >
+					{(magic, info) => (
+						<TrashCan
+						isDraggingFromThis={Boolean(info.draggingFromThisWith)} 
+						ref={magic.innerRef} 
+						{...magic.droppableProps}>🗑
+						{magic.placeholder}
+						</TrashCan>
+					)}
+				</Droppable>
+			</div>
+		</DragDropContext>
+	</Container>
 	);
   }
 
